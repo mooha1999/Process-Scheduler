@@ -5,7 +5,7 @@ class SJF : public Processor
 {
 public:
 	void ScheduleAlgo() override{
-
+		Processor::ScheduleAlgo();
 	}
 	void AddProcess(Process* process) override {
 		Processor::AddProcess(process);

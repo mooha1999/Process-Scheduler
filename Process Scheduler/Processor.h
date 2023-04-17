@@ -15,13 +15,21 @@ public:
 	{
 		BUSY, IDLE
 	};
-	virtual void ScheduleAlgo() = 0;
+	virtual void ScheduleAlgo() {
+		if (state == IDLE)
+		{
+			state = BUSY;
+			runningProcess = readyProcesses->Pop();
+			runningProcess->SetState(Process::RUN);
+		}
+	}
 	virtual void AddProcess(Process* process) {
 		waitingTime += process->GetCPUTime();
 	}
 	Process* RemoveProcess() {
 		Process* temp = nullptr;
-		if (runningProcess) {
+		if (state == BUSY) {
+			state = IDLE;
 			temp = runningProcess;
 			runningProcess = nullptr;
 		}

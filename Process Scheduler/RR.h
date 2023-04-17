@@ -8,7 +8,7 @@ public:
 		this->threshold = threshold;
 	}
 	void ScheduleAlgo() override {
-
+		Processor::ScheduleAlgo();
 	}
 	void AddProcess(Process* process) override {
 		Processor::AddProcess(process);
