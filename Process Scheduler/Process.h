@@ -4,9 +4,6 @@
 class Process
 {
 public:
-	enum Type {
-		Sys, Usr
-	};
 	enum State {
 		NEW, RDY, RUN, BLK, TRM, ORPH
 	};
@@ -20,7 +17,6 @@ private:
 	int responseTime;
 	int terminationTime;
 	int executionTime;
-	Type type;
 	State state;
 public:
 	Process(int id, int arrivalTime, int cpuTime) {
@@ -29,7 +25,6 @@ public:
 		this->cpuTime = cpuTime;
 		executionTime = 0;
 		responseTime = terminationTime = -1;
-		type = Sys;
 		state = NEW;
 		ioRequests = new Queue<Pair<int, int>*>();
 	}
@@ -48,9 +43,6 @@ public:
 	}
 	void SetState(State state) {
 		this->state = state;
-	}
-	void SetType(Type type) {
-		this->type = type;
 	}
 	
 	//	increment the process execution time by one if it is in the running state
@@ -76,7 +68,6 @@ public:
 	}
 	Queue<Pair<int, int>*>* GetIORequests() { return ioRequests; }
 	State GetState() { return state; }
-	Type GetType() { return type; }
 
 };
 
