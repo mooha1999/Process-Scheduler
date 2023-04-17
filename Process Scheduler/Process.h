@@ -71,6 +71,9 @@ public:
 	int GetWaitingTime() {
 		return GetTurnaroundTime() - cpuTime;
 	}
+	int GetRemainingTime() {
+		return cpuTime - executionTime;
+	}
 	Queue<Pair<int, int>*>* GetIORequests() { return ioRequests; }
 	State GetState() { return state; }
 	Type GetType() { return type; }
