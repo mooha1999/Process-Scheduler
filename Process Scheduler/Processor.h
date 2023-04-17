@@ -32,7 +32,6 @@ protected:
 
 	Process* runningProcess;
 	Queue<Process*>* blockedProcesses;
-	Queue<Process>* readyProcesses;
 	State state;
 	int executingTime;
 	int waitingTime;
