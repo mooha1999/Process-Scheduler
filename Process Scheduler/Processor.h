@@ -1,5 +1,5 @@
 #pragma once
-#include "DataStructures/Queue.h"
+#include "DataStructures/PriorityQueue.h"
 #include "Process.h"
 class Processor
 {
@@ -7,7 +7,7 @@ public:
 	//Processor ProcessorFactory()
 	Processor() {
 		runningProcess = nullptr;
-		blockedProcesses = new Queue<Process*>();
+		readyProcesses = new PriorityQueue<Process*>();
 		state = IDLE;
 		executingTime = waitingTime = 0;
 	}
@@ -19,8 +19,13 @@ public:
 	virtual void AddProcess(Process* process) {
 		waitingTime += process->GetCPUTime();
 	}
-	virtual Process* RemoveProcess() {
-		
+	Process* RemoveProcess() {
+		Process* temp = nullptr;
+		if (runningProcess) {
+			temp = runningProcess;
+			runningProcess = nullptr;
+		}
+		return temp;
 	};
 	void IncrementExecutingTime() {
 		if (state == BUSY)
@@ -31,7 +36,7 @@ public:
 protected:
 
 	Process* runningProcess;
-	Queue<Process*>* blockedProcesses;
+	PriorityQueue<Process*>* readyProcesses;
 	State state;
 	int executingTime;
 	int waitingTime;
