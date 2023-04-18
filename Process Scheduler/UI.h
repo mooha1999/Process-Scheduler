@@ -4,12 +4,15 @@
 #include <iostream>
 #include "Processor.h"
 #include <string>
+#include "SJF.h"
+#include "FCFS.h"
+#include "RR.h"
 using namespace std;
 class UI
 {
 	void displayProcessorInfo(Processor* processor)
 	{
-		cout << "[]: "<< processor->GetReadyProcessesCount() << "RDY: ";
+		cout << "[" + getProcessorType(processor) + "]: " << processor->GetReadyProcessesCount() << "RDY : ";
 		auto ids = *processor->GetReadyIDs();
 		for (int i = 0; i < ids.Size(); i++) {
 			cout << ids[i] << ", ";
@@ -20,6 +23,17 @@ class UI
 		{
 			cout << processes.Pop()->GetId() << ", ";
 		}
+	}
+	string getProcessorType(Processor* processor) {
+		SJF* sjf = dynamic_cast<SJF*>(processor);
+		if (sjf)
+			return "SJF";
+		FCFS* fcfs = dynamic_cast<FCFS*>(processor);
+		if (fcfs)
+			return "FCFS";
+		RR* rr = dynamic_cast<RR*>(processor);
+		if (rr)
+			return "RR";
 	}
 public:
 	void displayStartMessage() {
