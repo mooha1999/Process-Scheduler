@@ -39,7 +39,7 @@ public:
 	void displayStartMessage() {
 		cout << "Simulation started in Interactive mode\n";
 	}
-	void displayInfo(int timestep, LinkedList<Processor*>* processors, 
+	void displayInfo(int timestep, LinkedList<Processor*>* processors,
 		Queue<Process*>* blockedProcesses, Queue<Process*>* terminatedProcesses)
 	{
 		cout << "Current timestep: " << timestep;
@@ -62,7 +62,7 @@ public:
 		cout << runningProcessors.Size() << " RUN: ";
 		int I = 1;
 		while (!runningProcessors.IsEmpty()) {
-			cout << runningProcessors.Pop()->GetRunningProcess()->GetId() 
+			cout << runningProcessors.Pop()->GetRunningProcess()->GetId()
 				<< "(P" + to_string(I++) + ")\n";
 		}
 
@@ -76,4 +76,3 @@ public:
 		cout << "Simulation ended";
 	}
 };
-

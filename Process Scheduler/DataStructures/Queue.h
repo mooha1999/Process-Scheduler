@@ -4,7 +4,27 @@
 template<typename T>
 class Queue : public Container
 {
-	Node<T>* Head, *Tail;
+	Node<T>* Head, * Tail;
+	class Iterator {
+	private:
+		Node<T>* current;
+
+	public:
+		Iterator(Node<T>* node) : current(node) {}
+
+		T operator*() const {
+			return current->getItem();
+		}
+
+		Iterator& operator++() {
+			current = current->getNext();
+			return *this;
+		}
+
+		bool operator!=(const Iterator& other) const {
+			return current != other.current;
+		}
+	};
 public:
 	Queue() { Head = Tail = nullptr; }
 
@@ -28,6 +48,11 @@ public:
 
 	T Peek() { return Head->getItem(); }
 
-	//virtual void Add(T item) { Push(item); }
-};
+	Iterator begin() const {
+		return Iterator(Head);
+	}
 
+	Iterator end() const {
+		return Iterator(nullptr);
+	}
+};

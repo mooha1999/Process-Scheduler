@@ -7,6 +7,26 @@ class LinkedList : public Container//<T>
 {
 	Node<T>* Head;
 	Node<T>* Tail;
+	class Iterator {
+	private:
+		Node<T>* current;
+
+	public:
+		Iterator(Node<T>* node) : current(node) {}
+
+		T operator*() const {
+			return current->getItem();
+		}
+
+		Iterator& operator++() {
+			current = current->getNext();
+			return *this;
+		}
+
+		bool operator!=(const Iterator& other) const {
+			return current != other.current;
+		}
+	};
 public:
 	LinkedList()
 	{
@@ -56,5 +76,11 @@ public:
 		for (int i = 0; i < index; h = h->getNext(), i++);
 		return h->getItem();
 	}
-	//virtual void Add(T item) { InsertEnd(item); }
+	Iterator begin() const {
+		return Iterator(Head);
+	}
+
+	Iterator end() const {
+		return Iterator(nullptr);
+	}
 };

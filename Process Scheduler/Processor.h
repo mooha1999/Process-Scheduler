@@ -7,56 +7,38 @@ class Processor
 public:
 	//Processor ProcessorFactory()
 	Processor() {
-		runningProcess = nullptr;
-		readyProcesses = new PriorityQueue<Process*>();
+		runningProcess = finishedProcess = blockedProcess = nullptr;
 		state = IDLE;
-		executingTime = waitingTime = 0;
+		executingTime = 0;
 	}
 	enum State
 	{
 		BUSY, IDLE
 	};
-	virtual void ScheduleAlgo() {
-		if (state == IDLE)
-		{
-			state = BUSY;
-			runningProcess = readyProcesses->Pop();
-			readyIds->Remove(runningProcess->GetId());
-			runningProcess->SetState(Process::RUN);
-		}
-	}
+	virtual void ScheduleAlgo() = 0;
 	virtual void AddProcess(Process* process) {
-		waitingTime += process->GetCPUTime();
-		readyIds->InsertEnd(process->GetId());
-	}
-	Process* RemoveProcess() {
-		Process* temp = nullptr;
-		if (state == BUSY) {
-			state = IDLE;
-			temp = runningProcess;
-			runningProcess = nullptr;
-		}
-		return temp;
+		process->SetState(Process::RDY);
 	};
-	int GetReadyProcessesCount() {
-		return readyProcesses->Size();
-	}
-	void IncrementExecutingTime() {
-		if (state == BUSY)
-			executingTime++;
-	}
+	virtual int GetReadyProcessesCount() = 0;
 	int GetExecutingTime() { return executingTime; }
 	Process* GetRunningProcess() { return runningProcess; }
-	LinkedList<int>* GetReadyIDs() {
-		return readyIds;
+	Process* GetFinishedProcess() {
+		auto ret = finishedProcess;
+		finishedProcess = nullptr;
+		return ret;
 	}
+	Process* GetBlockedProcess() {
+		auto ret = blockedProcess;
+		blockedProcess = nullptr;
+		return blockedProcess;
+	}
+	virtual string GetReadyIDs() = 0;
+	virtual string GetType() = 0;
 	State GetState() { return state; }
 protected:
-	LinkedList<int>* readyIds;
 	Process* runningProcess;
-	PriorityQueue<Process*>* readyProcesses;
+	Process* finishedProcess;
+	Process* blockedProcess;
 	State state;
 	int executingTime;
-	int waitingTime;
 };
-
