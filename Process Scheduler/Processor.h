@@ -15,7 +15,7 @@ public:
 	{
 		BUSY, IDLE
 	};
-	virtual void ScheduleAlgo() = 0;
+	virtual void ScheduleAlgo(int timestep) = 0;
 	virtual void AddProcess(Process* process) {
 		process->SetState(Process::RDY);
 	};
