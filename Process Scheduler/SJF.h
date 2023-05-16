@@ -52,4 +52,11 @@ public:
 		return readyProcesses->Size();
 	}
 	string GetType() { return "SJF"; }
+	int GetWaitingTime() {
+		int wt = 0;
+		for (auto i : *readyProcesses) {
+			wt += i->GetRemainingTime();
+		}
+		return wt;
+	}
 };

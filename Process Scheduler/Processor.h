@@ -34,6 +34,7 @@ public:
 	}
 	virtual string GetReadyIDs() = 0;
 	virtual string GetType() = 0;
+	virtual int GetWaitingTime() = 0;
 	State GetState() { return state; }
 protected:
 	Process* runningProcess;

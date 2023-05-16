@@ -59,4 +59,11 @@ public:
 		}
 		return ret;
 	}
+	int GetWaitingTime() {
+		int wt = 0;
+		for (auto i : *readyProcesses) {
+			wt += i->GetRemainingTime();
+		}
+		return wt;
+	}
 };
