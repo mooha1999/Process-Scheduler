@@ -13,7 +13,8 @@ public:
 		if (!readyProcesses->IsEmpty() && !runningProcess) {
 			runningProcess = readyProcesses->Pop();
 			runningProcess->SetState(Process::RUN);
-			runningProcess->SetResponseTime(timestep);
+			if (runningProcess->GetExecutionTime() == 0)
+				runningProcess->SetResponseTime(timestep);
 			return;
 		}
 		switch (runningProcess->GetState())

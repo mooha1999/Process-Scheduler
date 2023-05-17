@@ -9,7 +9,8 @@ public:
 			runningProcess = (*readyProcesses)[0];
 			readyProcesses->Remove(runningProcess);
 			runningProcess->SetState(Process::RUN);
-			runningProcess->SetResponseTime(timestep);
+			if (runningProcess->GetExecutionTime() == 0)
+				runningProcess->SetResponseTime(timestep);
 			return;
 		}
 		switch (runningProcess->GetState())
