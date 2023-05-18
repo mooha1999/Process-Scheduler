@@ -74,6 +74,7 @@ public:
 	int GetExecutionTime() { return executionTime; }
 	int GetResponseTime() { return responseTime; }
 	int GetTerminationTime() { return terminationTime; }
+	int GetIOTime() { return ioTime; }
 	int GetTurnaroundTime() {
 		return terminationTime - arrivalTime;
 	}
