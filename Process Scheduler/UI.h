@@ -39,13 +39,14 @@ public:
 	void displayStartMessage() {
 		cout << "Simulation started in Interactive mode\n";
 	}
-	void displayInfo(int timestep, Queue<FCFS*> fcfsq, Queue<SJF*> sjfq, Queue<RR*> rrq,
+	void displayInfo(int timestep, LinkedList<FCFS*> fcfsq, LinkedList<SJF*> sjfq, LinkedList<RR*> rrq,
 		Queue<Process*> blockedProcesses, Queue<Process*> terminatedProcesses)
 	{
-		cout << "Current timestep: " << timestep;
+		cout << "Current timestep: " << timestep << endl;
 		cout << "--------- RDY processes ---------\n";
 		int runningProcessorsCount = 0;
 		Queue<Processor*> runningProcessors;
+
 		for (int i = 0; i < processors->Size(); i++) {
 			auto temp = processors->operator[](i);
 			cout << "Processor " << i + 1 << " ";
