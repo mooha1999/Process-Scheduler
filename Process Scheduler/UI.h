@@ -39,8 +39,8 @@ public:
 	void displayStartMessage() {
 		cout << "Simulation started in Interactive mode\n";
 	}
-	void displayInfo(int timestep, LinkedList<Processor*>* processors,
-		Queue<Process*>* blockedProcesses, Queue<Process*>* terminatedProcesses)
+	void displayInfo(int timestep, Queue<FCFS*> fcfsq, Queue<SJF*> sjfq, Queue<RR*> rrq,
+		Queue<Process*> blockedProcesses, Queue<Process*> terminatedProcesses)
 	{
 		cout << "Current timestep: " << timestep;
 		cout << "--------- RDY processes ---------\n";
