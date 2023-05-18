@@ -8,6 +8,7 @@
 #include "RR.h"
 #include "SJF.h"
 #include "Processor.h"
+#include "UI.h"
 #include "DataStructures/Queue.h"
 #include <string>
 using namespace std;
@@ -86,10 +87,13 @@ public:
     }
     void Simulate()
     {
+        UI ui;
+        ui.displayStartMessage();
         int timestep = 0;
         while (true)
         {
-            if (NewProcesses.Peek()->GetArrivalTime() == timestep )
+            //NEW To RDY
+            if (!NewProcesses.IsEmpty() && NewProcesses.Peek()->GetArrivalTime() == timestep)
             {
                 Processor* shortestp;
                 int x = 999999999;
@@ -125,78 +129,158 @@ public:
                 shortestp->AddProcess(NewProcesses.Pop());
                
             }
-            if (KillQueue->Peek()->GetFirst() == timestep)
+            // KillSig
+            if (!KillQueue->IsEmpty() && KillQueue->Peek()->GetFirst() == timestep)
             {
                 for (auto i : FCFSList)
                 {
 
-                    i->killProcess(KillQueue->Peek()->GetSecond(), timestep);
+                    Queue<Process*>killedprocesses= i->killProcess(KillQueue->Peek()->GetSecond(), timestep);
+                    for (auto i : killedprocesses)
+                    {
+                        i->SetTerminationTime(timestep);
+                        TrmQueue.Push(i);
+                    }
+
                 }
             }
+            // Forking
             for (Processor* i : FCFSList)
                 {
                     if (i->GetRunningProcess() && isFork())
                     {
-                        i->GetRunningProcess()->Fork(rand()%1000,timestep);
+                     
+                        Process*child= i->GetRunningProcess()->Fork(rand() % 1000, timestep); // Set appropriate ID
+                        Processor* shortestprocessor;
+                        int x = 999999999;
+                        for (Processor* i : FCFSList)
+                        {
+                            int gwt = i->GetWaitingTime();
+                            if (gwt < x)
+                            {
+                                x = gwt;
+                                shortestprocessor = i;
+                            }
+                        }
+                        shortestprocessor->AddProcess(child); // Forked child to shortest FCFS
                     }
                 
             }
-            Processor* processio;
-            if (processio->GetBlockedProcess()!=nullptr)
+           
+         // RUN to BLK
+            for (Processor* i : FCFSList)
             {
-                for (Processor* i : FCFSList)
+                Process* pro = i->GetBlockedProcess();
+                if (pro)
                 {
-                    Process* pro = i->GetBlockedProcess();
-                    BlkQueue.Push(pro);
-                }
-                for (Processor* i : SJFList)
-                {
-                    Process* pro = i->GetBlockedProcess();
-                    BlkQueue.Push(pro);
-                }
-                for (Processor* i : RRList)
-                {
-                    Process* pro = i->GetBlockedProcess();
                     BlkQueue.Push(pro);
                 }
                
             }
-            Processor* PRDY;
-            if (PRDY.)
+            for (Processor* i : SJFList)
             {
-
-            }
-            Processor* PTRM;
-            if (PTRM->GetFinishedProcess()!=nullptr)
-            {
-                for (Processor* i : FCFSList)
+                Process* pro = i->GetBlockedProcess();
+                if (pro)
                 {
-                    Process* processtrm = i->GetFinishedProcess();
-                    TrmQueue.Push(processtrm);
-                }
-                for (Processor* i : SJFList)
-                {
-                    Process* processtrm = i->GetFinishedProcess();
-                    TrmQueue.Push(processtrm);
-                }
-                for (Processor* i : RRList)
-                {
-                    Process* processtrm = i->GetFinishedProcess();
-                    TrmQueue.Push(processtrm);
-
+                    BlkQueue.Push(pro);
                 }
             }
-            if (!KillQueue->IsEmpty())
+            for (Processor* i : RRList)
             {
-                Process* Pkill;
-                KillQueue->Pop();
-                TrmQueue.Push(Pkill);
+                Process* pro = i->GetBlockedProcess();
+                if (pro)
+                {
+                    BlkQueue.Push(pro);
+                }
             }
+         // END RUN to BLK      
+      
+         // BLK to RDY
+            if (!BlkQueue.IsEmpty())
+            {
+                if (BlkQueue.Peek()->GetIOTime() == BlkQueue.Peek()->GetIORequests()->Peek()->GetSecond())
+                {
+                    Process* processblked = BlkQueue.Pop();
+                    processblked->GetIORequests()->Pop();
+                    Processor* shortestp;
+                    int x = 999999999;
+                    for (Processor* i : FCFSList)
+                    {
+                        int gwt = i->GetWaitingTime();
+                        if (gwt < x)
+                        {
+                            x = gwt;
+                            shortestp = i;
+                        }
+                    }
+                    for (Processor* i : SJFList)
+                    {
 
+                        int gwt = i->GetWaitingTime();
+                        if (gwt < x)
+                        {
+                            x = gwt;
+                            shortestp = i;
+                        }
+                    }
+                    for (Processor* i : RRList)
+                    {
 
+                        int gwt = i->GetWaitingTime();
+                        if (gwt < x)
+                        {
+                            x = gwt;
+                            shortestp = i;
+                        }
+                    }
+                    shortestp->AddProcess(processblked);
+                }
+                else
+                {
+                    BlkQueue.Peek()->IncrementIOTime();
+                }
+            }
+         //End BLK to RDY
+         
+         //RUN to TRM
+            for (Processor* i : FCFSList)
+            {
+                Process* pro = i->GetFinishedProcess();
+                if (pro)
+                {
+                    pro->SetTerminationTime(timestep);
+                    TrmQueue.Push(pro);
+                }
 
+            }
+            for (Processor* i : SJFList)
+            {
+                Process* pro = i->GetFinishedProcess();
+                if (pro)
+                {
+                    pro->SetTerminationTime(timestep);
+                    TrmQueue.Push(pro);
+                }
+            }
+            for (Processor* i : RRList)
+            {
+                Process* pro = i->GetFinishedProcess();
+                if (pro)
+                {
+                    pro->SetTerminationTime(timestep);
+                    TrmQueue.Push(pro);
+                }
+            }
+         // END RUN to TRM
+            
+          
+
+            ui.displayInfo(timestep,FCFSList,SJFList,RRList,BlkQueue,TrmQueue);
             timestep++;
         }
+        ui.displayEndMessage();
     }
+
+
  
 };
