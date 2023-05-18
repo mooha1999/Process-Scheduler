@@ -22,6 +22,7 @@ public:
     Queue<Process*>NewProcesses;
     Queue<Pair<int, int>*>* KillQueue;
     Queue<Process*>BlkQueue;
+    Queue<Process*>TrmQueue;
     double forkProb;
     Scheduler(string file) {
 
@@ -140,23 +141,56 @@ public:
                     }
                 
             }
-            Process* processio;
-            if (processio->GetIORequests())
+            Processor* processio;
+            if (processio->GetBlockedProcess()!=nullptr)
             {
                 for (Processor* i : FCFSList)
                 {
-                    BlkQueue.Push(processio);
+                    Process* pro = i->GetBlockedProcess();
+                    BlkQueue.Push(pro);
                 }
                 for (Processor* i : SJFList)
                 {
-
-                    BlkQueue.Push(processio);
+                    Process* pro = i->GetBlockedProcess();
+                    BlkQueue.Push(pro);
                 }
                 for (Processor* i : RRList)
                 {
-                    BlkQueue.Push(processio);
+                    Process* pro = i->GetBlockedProcess();
+                    BlkQueue.Push(pro);
                 }
                
+            }
+            Processor* PRDY;
+            if (PRDY.)
+            {
+
+            }
+            Processor* PTRM;
+            if (PTRM->GetFinishedProcess()!=nullptr)
+            {
+                for (Processor* i : FCFSList)
+                {
+                    Process* processtrm = i->GetFinishedProcess();
+                    TrmQueue.Push(processtrm);
+                }
+                for (Processor* i : SJFList)
+                {
+                    Process* processtrm = i->GetFinishedProcess();
+                    TrmQueue.Push(processtrm);
+                }
+                for (Processor* i : RRList)
+                {
+                    Process* processtrm = i->GetFinishedProcess();
+                    TrmQueue.Push(processtrm);
+
+                }
+            }
+            if (!KillQueue->IsEmpty())
+            {
+                Process* Pkill;
+                KillQueue->Pop();
+                TrmQueue.Push(Pkill);
             }
 
 
