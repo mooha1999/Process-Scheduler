@@ -1,5 +1,7 @@
 #pragma once
 #include "Processor.h"
+#include <string>;
+using namespace std;
 class RR : public Processor
 {
 	int threshold;

@@ -3,6 +3,6 @@
 using namespace std;
 int main() {
 	Scheduler scheduler("");
-	scheduler.loadFromFile(""); //Name of the input file
+	scheduler.loadFromFile("input.txt"); //Name of the input file
 	scheduler.Simulate();
 }

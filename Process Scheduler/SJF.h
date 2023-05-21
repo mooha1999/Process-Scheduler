@@ -1,9 +1,11 @@
 #pragma once
 #include "Processor.h"
 #include "DataStructures/PriorityQueue.h"
+#include <string>;
+using namespace std;
 class SJF : public Processor
 {
-	PriorityQueue<Process*>* readyProcesses;
+	PriorityQueue<Process*>* readyProcesses = new PriorityQueue<Process*>();
 public:
 	void ScheduleAlgo(int timestep) {
 		if (!readyProcesses->IsEmpty() && !runningProcess) {

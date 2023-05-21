@@ -1,8 +1,10 @@
 #pragma once
 #include "Processor.h"
+#include <string>;
+using namespace std;
 class FCFS : public Processor
 {
-	LinkedList<Process*>* readyProcesses;
+	LinkedList<Process*>* readyProcesses = new LinkedList<Process*>();
 public:
 	void ScheduleAlgo(int timestep) {
 		if (!readyProcesses->IsEmpty() && !runningProcess) {
