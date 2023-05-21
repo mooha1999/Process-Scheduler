@@ -2,6 +2,7 @@
 #include "DataStructures/LinkedList.h"
 
 #include <iostream>
+#include <Windows.h>
 #include "Processor.h"
 #include <string>
 #include "SJF.h"
@@ -17,13 +18,18 @@ class UI
 		}
 		cout << endl;
 	}
+	int choice = 0;
 public:
 	void displayStartMessage() {
+		cout << "Enter Mode:\n[1] Interactive\n[2] Step-by-Step\n[3] Silent\n";
+		cin >> choice;
 		cout << "Simulation started in Interactive mode\n";
 	}
 	void displayInfo(int timestep, LinkedList<FCFS*> fcfsList, LinkedList<SJF*> sjfList, LinkedList<RR*> rrList,
 		Queue<Process*> blockedProcesses, Queue<Process*> terminatedProcesses)
 	{
+		if (choice == 3)
+			return;
 		cout << "Current timestep: " << timestep << endl;
 		cout << "--------- RDY processes ---------\n";
 		int runningProcessorsCount = 0;
@@ -70,8 +76,13 @@ public:
 		cout << "--------- TRM processes ---------\n";
 		cout << terminatedProcesses.Size() << " TRM: " << endl;
 		displayIDs(terminatedProcesses);
-		cout << "Enter any key to continue";
-		getchar();
+		if (choice == 1) {
+			cout << "Enter any key to continue";
+			getchar();
+		}
+		else {
+			Sleep(1000);
+		}
 	}
 	void displayEndMessage() {
 		cout << "Simulation ended";
